@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Categorización de Lectura — Grado 11° · 2026</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f3;color:#1a1a1a;min-height:100vh}
+.app{max-width:900px;margin:0 auto;padding:24px 16px}
+.topbar{display:flex;align-items:flex-start;gap:12px;margin-bottom:1.5rem}
+.back-btn{display:none;align-items:center;gap:6px;font-size:13px;color:#5f5e5a;cursor:pointer;padding:5px 12px;border-radius:8px;border:1px solid #d3d1c7;background:#fff;white-space:nowrap;flex-shrink:0}
+.back-btn:hover{background:#f1efe8}
+.hdr-block{flex:1;min-width:0}
+.hdr-inst{font-size:12px;font-weight:600;color:#534AB7;margin-bottom:3px}
+.hdr-title{font-size:20px;font-weight:600;color:#1a1a1a}
+.hdr-sub{font-size:12px;color:#888780;margin-top:2px}
+.hdr-badge{display:inline-block;background:#081C3C;color:#C8951E;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;letter-spacing:.5px;margin-top:5px}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem}
+@media(max-width:600px){.metrics{grid-template-columns:repeat(2,1fr)}}
+.met{background:#fff;border-radius:10px;padding:14px 16px;border:1px solid #e8e6e0}
+.met .ml{font-size:11px;color:#888780;margin-bottom:4px}
+.met .mv{font-size:22px;font-weight:700}
+.met .ms{font-size:11px;color:#888780;margin-top:2px}
+.comp-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.25rem}
+@media(max-width:500px){.comp-row{grid-template-columns:1fr}}
+.comp-card{background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #e8e6e0}
+.comp-card .cl{font-size:11px;font-weight:600;margin-bottom:5px}
+.comp-card .cv{font-size:20px;font-weight:700;margin-bottom:6px}
+.bar-bg{height:6px;border-radius:3px;background:#f1efe8;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px}
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.section-hdr h2{font-size:14px;font-weight:600;color:#1a1a1a}
+.filter-wrap{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.filter-wrap label{font-size:12px;color:#888780}
+select{font-size:12px;padding:4px 8px;border-radius:8px;border:1px solid #d3d1c7;background:#fff;color:#1a1a1a;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:1rem}
+.stu-card{background:#fff;border:1px solid #e8e6e0;border-radius:12px;padding:14px;cursor:pointer;transition:border-color .15s,transform .1s}
+.stu-card:hover{border-color:#081C3C;transform:translateY(-1px)}
+.stu-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;margin-bottom:8px}
+.stu-name{font-size:12px;font-weight:600;color:#1a1a1a;margin-bottom:2px;line-height:1.3}
+.stu-nro{font-size:10px;color:#888780;margin-bottom:6px}
+.stu-pct{font-size:22px;font-weight:700;margin-bottom:6px}
+.stu-bars{display:flex;flex-direction:column;gap:4px;margin-bottom:8px}
+.sbar-row{display:flex;align-items:center;gap:5px}
+.sbar-lbl{font-size:10px;font-weight:600;width:13px}
+.sbar-bg{flex:1;height:4px;border-radius:2px;background:#f1efe8;overflow:hidden}
+.sbar-fill{height:100%;border-radius:2px}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700}
+.b-a{background:#EAF3DE;color:#27500A}
+.b-m{background:#FAEEDA;color:#633806}
+.b-b{background:#FCEBEB;color:#791F1F}
+.detail-view{display:none}
+.dv-header{display:flex;align-items:center;gap:16px;margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px solid #e8e6e0}
+.dv-avatar{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0}
+.dv-name{font-size:20px;font-weight:700;color:#1a1a1a}
+.dv-sub{font-size:13px;color:#888780;margin-top:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.dv-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem}
+@media(max-width:600px){.dv-metrics{grid-template-columns:repeat(2,1fr)}}
+.dv-comp{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.25rem}
+@media(max-width:500px){.dv-comp{grid-template-columns:1fr}}
+.dv-comp-card{background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #e8e6e0}
+.dv-comp-card .dcl{font-size:11px;font-weight:700;margin-bottom:5px}
+.dv-comp-card .dcv{font-size:22px;font-weight:700;margin-bottom:3px}
+.dv-comp-card .dcs{font-size:11px;color:#888780}
+.legend-row{display:flex;gap:14px;font-size:11px;color:#888780;margin-bottom:10px;flex-wrap:wrap}
+.legend-row span{display:flex;align-items:center;gap:4px}
+.ldot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.q-section-lbl{font-size:12px;font-weight:600;color:#888780;margin-bottom:8px}
+.q-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:1.25rem}
+@media(max-width:500px){.q-grid{grid-template-columns:repeat(4,1fr)}}
+.q-cell{border-radius:8px;padding:8px 4px;text-align:center;border:1px solid #e8e6e0}
+.q-num{font-size:10px;color:#888780;margin-bottom:3px}
+.q-comp{font-size:9px;margin-bottom:3px;font-weight:700}
+.q-ans{font-size:15px;font-weight:700}
+.q-key{font-size:10px;color:#888780;margin-top:2px}
+.q-ok{background:#EAF3DE;border-color:#97C459}
+.q-no{background:#FCEBEB;border-color:#F09595}
+.q-skip{background:#f5f5f3;border-color:#e8e6e0}
+.nav-row{display:flex;gap:8px;margin-top:1.25rem;padding-top:1rem;border-top:1px solid #e8e6e0}
+.nav-btn{font-size:12px;padding:6px 14px;border-radius:8px;border:1px solid #d3d1c7;cursor:pointer;background:#fff;color:#5f5e5a}
+.nav-btn:hover{background:#f1efe8;border-color:#081C3C}
+.diag-section{margin-top:1rem;padding:14px 16px;background:#f8f7f5;border-radius:10px;border:1px solid #e8e6e0}
+.diag-section h3{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:10px}
+.diag-list{display:flex;flex-direction:column;gap:6px}
+.diag-item{font-size:12px;color:#5f5e5a;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.diag-dot{width:7px;height:7px;border-radius:50%;margin-top:4px;flex-shrink:0}
+footer{text-align:center;font-size:11px;color:#b4b2a9;padding:24px 0 8px;border-top:1px solid #e8e6e0;margin-top:2rem}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="topbar">
+    <button class="back-btn" id="backBtn" onclick="showGeneral()">&#8592; Volver al grupo</button>
+    <div class="hdr-block">
+      <div class="hdr-inst">I.E. Técnica Santa Rosa de Lima · Melgar, Tolima</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px">
+        <div class="hdr-title" id="pageTitle">Grupo general</div>
+        <span class="hdr-badge">GRUPO GERT</span>
+      </div>
+      <div class="hdr-sub" id="pageSub">Prueba de categorización · 29 abril 2026 · Grado 11°</div>
+    </div>
+  </div>
+
+  <div id="generalView">
+    <div class="metrics" id="gMetrics"></div>
+    <div class="comp-row" id="gComp"></div>
+    <div class="section-hdr">
+      <h2>Estudiantes — clic para ver perfil individual</h2>
+      <div class="filter-wrap">
+        <label>Nivel:</label>
+        <select onchange="filterGrid(this.value)">
+          <option value="all">Todos</option>
+          <option value="Alto">Alto</option>
+          <option value="Medio">Medio</option>
+          <option value="Bajo">Bajo</option>
+        </select>
+        <label>Ordenar:</label>
+        <select onchange="sortGrid(this.value)">
+          <option value="nro">N°</option>
+          <option value="desc">Mayor puntaje</option>
+          <option value="asc">Menor puntaje</option>
+          <option value="name">Nombre</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid" id="stuGrid"></div>
+  </div>
+
+  <div class="detail-view" id="detailView">
+    <div class="dv-header">
+      <div class="dv-avatar" id="dvAvatar"></div>
+      <div>
+        <div class="dv-name" id="dvName"></div>
+        <div class="dv-sub" id="dvSub"></div>
+      </div>
+    </div>
+    <div class="dv-metrics" id="dvMetrics"></div>
+    <div class="dv-comp" id="dvComp"></div>
+    <div class="legend-row">
+      <span><span class="ldot" style="background:#97C459"></span>Correcta</span>
+      <span><span class="ldot" style="background:#F09595"></span>Incorrecta</span>
+      <span><span class="ldot" style="background:#d3d1c7"></span>Sin respuesta</span>
+      <span><span class="ldot" style="background:#AFA9EC"></span>Semántica</span>
+      <span><span class="ldot" style="background:#5DCAA5"></span>Sintaxis</span>
+      <span><span class="ldot" style="background:#F0997B"></span>Pragmática</span>
+    </div>
+    <div class="q-section-lbl">Respuesta por pregunta</div>
+    <div class="q-grid" id="dvQGrid"></div>
+    <div class="diag-section" id="dvDiag"></div>
+    <div class="nav-row" id="dvNav"></div>
+  </div>
+
+  <footer>GRUPO GERT · Especialistas en Pruebas Saber · Programa Preparación ICFES 2026 &nbsp;|&nbsp; I.E. Técnica Santa Rosa de Lima · Melgar, Tolima</footer>
+</div>
+
+<script>
+const CLAVE=['A','C','C','C','D','C','B','A','B','A','B','A','A','D'];
+const COMP_LBL=['Prag','Sem','Prag','Sint','Prag','Sint','Sem','Sem','Prag','Sem','Sint','Sem','Sint','Sint'];
+const COMP_TYPE=['P','S','P','X','P','X','S','S','P','S','X','S','X','X'];
+const SEM_I=[1,6,7,9,11];
+const SIN_I=[3,10,12,13];
+const PRA_I=[0,2,4,5,8];
+const AVATARS=[['#EEEDFE','#534AB7'],['#E1F5EE','#0F6E56'],['#FAECE7','#993C1D'],['#E6F1FB','#185FA5'],['#FAEEDA','#633806'],['#EAF3DE','#3B6D11']];
+
+const RAW=[
+  {n:'Vivian Rodríguez',   r:['A','A','B','B','D','C','B','D','B','A','C','A','B','A']},
+  {n:'Carlos Mayorga',     r:['B','C','C','C','A','C','D','A','B','C','A','D','B','D']},
+  {n:'Matías Guarín',     r:['A','C','A','C','D','B','B','B','B','A','C','A','D','B']},
+  {n:'Johan Aguirre',      r:['A','C','A','C','D','C','B','D','B','A','C','A','D','D']},
+  {n:'Erick Quintero',     r:['A','D','A','C','D','C','B','B','B','A','C','C','D','D']},
+  {n:'Jana Quebradas',     r:['A','C','D','B','D','C','B','A','B','A','C','C','D','D']},
+  {n:'Karol Hernández',   r:['A','C','C','D','B','C','B','D','B','A','C','D','D','D']},
+  {n:'Valery Arias',       r:['A','D','D','B','D','B','B','A','B','C','D','C','B','D']},
+  {n:'Camilo Arias',       r:['A','C','D','B','D','B','C','A','B','A','C','D','D','D']},
+  {n:'Brayan Casteblanco', r:['A','A','B','B','B','C','B','A','B','A','C','D','D','B']},
+  {n:'Sara V. Gámez',     r:['A','C','D','C','D','C','D','B','B','A','C','C','D','D']},
+  {n:'Katherin Tabares',   r:['A','C','C','C','B','C','A','A','B','A','C','A','B','A']},
+  {n:'Gissel Hidalgo',     r:['A','C','D','C','B','C','B','A','B','A','C','A','B','A']},
+  {n:'Ashly Díaz',        r:['A','C','C','C','C','B','B','A','A','C','B','B','-','-']},
+  {n:'Samuel Ardila',      r:['A','C','A','C','D','B','B','A','B','C','A','A','D','D']},
+  {n:'David Cadena',       r:['A','C','A','C','A','B','B','D','B','A','C','A','B','D']},
+  {n:'José D. Mora',      r:['A','A','D','C','C','C','A','B','B','A','D','C','B','B']},
+  {n:'Juan F. Sanabria',   r:['A','C','D','C','B','C','B','A','B','A','C','A','B','B']},
+  {n:'Daniela Vargas',     r:['A','C','C','D','B','A','B','A','B','A','D','C','D','D']},
+  {n:'Gabriel Buitrago',   r:['A','A','A','C','D','C','B','A','B','A','C','A','B','D']},
+  {n:'Nicoll Cortés',     r:['A','C','D','C','C','C','B','A','B','A','B','C','B','D']},
+  {n:'Krass Acosta',       r:['A','C','C','C','D','B','B','A','B','A','C','C','B','D']},
+];
+
+function initials(name){return name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase()}
+
+function process(s,idx){
+  let h=CLAVE.map((k,i)=>{let a=(s.r[i]||'').toUpperCase().replace(/[^ABCD]/,'');return a===k;});
+  let ans=s.r.map(v=>{let a=(v||'').toUpperCase().replace(/[^ABCD]/,'');return a||'–';});
+  let tot=h.filter(Boolean).length;
+  let sem=SEM_I.filter(i=>h[i]).length;
+  let sin=SIN_I.filter(i=>h[i]).length;
+  let pra=PRA_I.filter(i=>h[i]).length;
+  let pct=Math.round(tot/14*100);
+  let nivel=pct>=71?'Alto':pct>=50?'Medio':'Bajo';
+  let av=AVATARS[idx%AVATARS.length];
+  return{...s,idx:idx+1,h,ans,tot,pct,nivel,sem,sin,pra,
+    semP:Math.round(sem/5*100),sinP:Math.round(sin/4*100),praP:Math.round(pra/5*100),
+    avBg:av[0],avCl:av[1]};
+}
+
+const DATA=RAW.map((s,i)=>process(s,i));
+let currentFilter='all', currentSort='nro';
+
+function badgeHTML(n){
+  if(n==='Alto') return '<span class="badge b-a">Alto</span>';
+  if(n==='Medio') return '<span class="badge b-m">Medio</span>';
+  return '<span class="badge b-b">Bajo</span>';
+}
+function pctColor(n){return n==='Alto'?'#27500A':n==='Medio'?'#633806':'#791F1F'}
+function barColor(n){return n==='Alto'?'#639922':n==='Medio'?'#BA7517':'#E24B4A'}
+
+function buildGMetrics(){
+  let avg=Math.round(DATA.reduce((a,d)=>a+d.pct,0)/DATA.length);
+  let alto=DATA.filter(d=>d.nivel==='Alto').length;
+  let med=DATA.filter(d=>d.nivel==='Medio').length;
+  let baj=DATA.filter(d=>d.nivel==='Bajo').length;
+  document.getElementById('gMetrics').innerHTML=`
+    <div class="met"><div class="ml">Promedio grupo</div><div class="mv">${avg}%</div><div class="ms">22 estudiantes</div></div>
+    <div class="met"><div class="ml">Nivel alto</div><div class="mv" style="color:#27500A">${alto}</div><div class="ms">≥ 71%</div></div>
+    <div class="met"><div class="ml">Nivel medio</div><div class="mv" style="color:#633806">${med}</div><div class="ms">50–64%</div></div>
+    <div class="met"><div class="ml">Nivel bajo</div><div class="mv" style="color:#791F1F">${baj}</div><div class="ms">≤ 42%</div></div>`;
+}
+
+function buildGComp(){
+  let semA=Math.round(DATA.reduce((a,d)=>a+d.semP,0)/DATA.length);
+  let sinA=Math.round(DATA.reduce((a,d)=>a+d.sinP,0)/DATA.length);
+  let praA=Math.round(DATA.reduce((a,d)=>a+d.praP,0)/DATA.length);
+  document.getElementById('gComp').innerHTML=`
+    <div class="comp-card"><div class="cl" style="color:#534AB7">Semántica — 5 preguntas</div><div class="cv" style="color:#534AB7">${semA}%</div><div class="bar-bg"><div class="bar-fill" style="width:${semA}%;background:#7F77DD"></div></div></div>
+    <div class="comp-card"><div class="cl" style="color:#0F6E56">Sintaxis — 4 preguntas</div><div class="cv" style="color:#0F6E56">${sinA}%</div><div class="bar-bg"><div class="bar-fill" style="width:${sinA}%;background:#1D9E75"></div></div></div>
+    <div class="comp-card"><div class="cl" style="color:#993C1D">Pragmática — 5 preguntas</div><div class="cv" style="color:#993C1D">${praA}%</div><div class="bar-bg"><div class="bar-fill" style="width:${praA}%;background:#D85A30"></div></div></div>`;
+}
+
+function getFiltered(){
+  let d=currentFilter==='all'?[...DATA]:DATA.filter(x=>x.nivel===currentFilter);
+  if(currentSort==='desc') d.sort((a,b)=>b.pct-a.pct);
+  else if(currentSort==='asc') d.sort((a,b)=>a.pct-b.pct);
+  else if(currentSort==='name') d.sort((a,b)=>a.n.localeCompare(b.n));
+  else d.sort((a,b)=>a.idx-b.idx);
+  return d;
+}
+
+function buildGrid(){
+  document.getElementById('stuGrid').innerHTML=getFiltered().map(s=>`
+    <div class="stu-card" onclick="showDetail(${s.idx-1})">
+      <div class="stu-avatar" style="background:${s.avBg};color:${s.avCl}">${initials(s.n)}</div>
+      <div class="stu-name">${s.n}</div>
+      <div class="stu-nro">Estudiante N° ${s.idx}</div>
+      <div class="stu-pct" style="color:${pctColor(s.nivel)}">${s.pct}%</div>
+      <div class="stu-bars">
+        <div class="sbar-row"><span class="sbar-lbl" style="color:#534AB7">S</span><div class="sbar-bg"><div class="sbar-fill" style="width:${s.semP}%;background:#7F77DD"></div></div><span style="font-size:10px;color:#888780;width:28px;text-align:right">${s.semP}%</span></div>
+        <div class="sbar-row"><span class="sbar-lbl" style="color:#0F6E56">X</span><div class="sbar-bg"><div class="sbar-fill" style="width:${s.sinP}%;background:#1D9E75"></div></div><span style="font-size:10px;color:#888780;width:28px;text-align:right">${s.sinP}%</span></div>
+        <div class="sbar-row"><span class="sbar-lbl" style="color:#993C1D">P</span><div class="sbar-bg"><div class="sbar-fill" style="width:${s.praP}%;background:#D85A30"></div></div><span style="font-size:10px;color:#888780;width:28px;text-align:right">${s.praP}%</span></div>
+      </div>
+      ${badgeHTML(s.nivel)}
+    </div>`).join('');
+}
+
+function filterGrid(v){currentFilter=v;buildGrid()}
+function sortGrid(v){currentSort=v;buildGrid()}
+
+function showGeneral(){
+  document.getElementById('generalView').style.display='';
+  document.getElementById('detailView').style.display='none';
+  document.getElementById('backBtn').style.display='none';
+  document.getElementById('pageTitle').textContent='Grupo general';
+  document.getElementById('pageSub').textContent='Prueba de categorización · 29 abril 2026 · Grado 11°';
+  window.scrollTo(0,0);
+}
+
+function diagnose(s){
+  let items=[];
+  if(s.semP>=80) items.push({ok:1,t:'Semántica: buen dominio en inferencia de significados y relaciones entre palabras.'});
+  else if(s.semP<50) items.push({ok:0,t:'Semántica: dificultad para interpretar palabras en contexto — reforzar lectura inferencial.'});
+  else items.push({ok:null,t:'Semántica: en desarrollo — practicar preguntas de significado por contexto.'});
+  if(s.sinP>=80) items.push({ok:1,t:'Sintaxis: comprende bien la estructura del discurso y relaciones entre oraciones.'});
+  else if(s.sinP<50) items.push({ok:0,t:'Sintaxis: dificultad con cohesión textual — trabajar conectores y estructura.'});
+  else items.push({ok:null,t:'Sintaxis: en proceso — practicar análisis de estructura textual.'});
+  if(s.praP>=80) items.push({ok:1,t:'Pragmática: identifica bien el propósito comunicativo y contexto del texto.'});
+  else if(s.praP<50) items.push({ok:0,t:'Pragmática: dificultad con la intención del texto — reforzar lectura crítica.'});
+  else items.push({ok:null,t:'Pragmática: en desarrollo — practicar identificación del propósito del autor.'});
+  if(s.pct<50) items.push({ok:0,t:'Requiere plan de refuerzo integral antes del Saber 11°.'});
+  else if(s.pct>=71) items.push({ok:1,t:'Desempeño sólido — continuar con textos de mayor complejidad.'});
+  let html='<h3>Diagnóstico y recomendaciones pedagógicas</h3><div class="diag-list">';
+  items.forEach(it=>{
+    let color=it.ok===1?'#639922':it.ok===0?'#E24B4A':'#BA7517';
+    html+=`<div class="diag-item"><span class="diag-dot" style="background:${color}"></span><span>${it.t}</span></div>`;
+  });
+  return html+'</div>';
+}
+
+function showDetail(idx){
+  let s=DATA[idx];
+  document.getElementById('generalView').style.display='none';
+  document.getElementById('detailView').style.display='block';
+  document.getElementById('backBtn').style.display='flex';
+  document.getElementById('pageTitle').textContent=s.n;
+  document.getElementById('pageSub').textContent='Perfil individual · Categorización de lectura';
+
+  document.getElementById('dvAvatar').textContent=initials(s.n);
+  document.getElementById('dvAvatar').style.background=s.avBg;
+  document.getElementById('dvAvatar').style.color=s.avCl;
+  document.getElementById('dvName').textContent=s.n;
+  document.getElementById('dvSub').innerHTML=`N° ${s.idx} &nbsp;&middot;&nbsp; ${badgeHTML(s.nivel)} &nbsp;&middot;&nbsp; Grado 11° &nbsp;&middot;&nbsp; 29 abril 2026`;
+
+  document.getElementById('dvMetrics').innerHTML=`
+    <div class="met"><div class="ml">Puntaje total</div><div class="mv" style="color:${pctColor(s.nivel)}">${s.pct}%</div><div class="ms">${s.tot}/14 correctas</div></div>
+    <div class="met"><div class="ml">Semántica</div><div class="mv" style="color:#534AB7">${s.semP}%</div><div class="ms">${s.sem}/5 correctas</div></div>
+    <div class="met"><div class="ml">Sintaxis</div><div class="mv" style="color:#0F6E56">${s.sinP}%</div><div class="ms">${s.sin}/4 correctas</div></div>
+    <div class="met"><div class="ml">Pragmática</div><div class="mv" style="color:#993C1D">${s.praP}%</div><div class="ms">${s.pra}/5 correctas</div></div>`;
+
+  let cDef=[['Semántica','#534AB7','#7F77DD','#EEEDFE',s.semP,s.sem+'/5'],['Sintaxis','#0F6E56','#1D9E75','#E1F5EE',s.sinP,s.sin+'/4'],['Pragmática','#993C1D','#D85A30','#FAECE7',s.praP,s.pra+'/5']];
+  document.getElementById('dvComp').innerHTML=cDef.map(c=>`
+    <div class="dv-comp-card" style="border-color:${c[2]}60">
+      <div class="dcl" style="color:${c[1]}">${c[0]}</div>
+      <div class="dcv" style="color:${c[1]}">${c[4]}%</div>
+      <div class="dcs">${c[5]} correctas</div>
+      <div class="bar-bg" style="margin-top:8px"><div class="bar-fill" style="width:${c[4]}%;background:${c[2]}"></div></div>
+    </div>`).join('');
+
+  let ctColor={'S':'#534AB7','X':'#0F6E56','P':'#993C1D'};
+  document.getElementById('dvQGrid').innerHTML=CLAVE.map((k,i)=>{
+    let ans=s.ans[i]; let ok=s.h[i];
+    let cls=ans==='–'?'q-skip':ok?'q-ok':'q-no';
+    return`<div class="q-cell ${cls}">
+      <div class="q-num">P${i+1}</div>
+      <div class="q-comp" style="color:${ctColor[COMP_TYPE[i]]}">${COMP_LBL[i]}</div>
+      <div class="q-ans">${ans}</div>
+      <div class="q-key">clave: ${k}</div>
+    </div>`;}).join('');
+
+  document.getElementById('dvDiag').innerHTML=diagnose(s);
+
+  let prevIdx=idx>0?idx-1:null;
+  let nextIdx=idx<DATA.length-1?idx+1:null;
+  document.getElementById('dvNav').innerHTML=
+    (prevIdx!==null?`<button class="nav-btn" onclick="showDetail(${prevIdx})">&#8592; ${DATA[prevIdx].n.split(' ')[0]}</button>`:'')+'<div style="flex:1"></div>'+
+    (nextIdx!==null?`<button class="nav-btn" onclick="showDetail(${nextIdx})">${DATA[nextIdx].n.split(' ')[0]} &#8594;</button>`:'');
+  window.scrollTo(0,0);
+}
+
+buildGMetrics();
+buildGComp();
+buildGrid();
+</script>
+</body>
+</html>
